@@ -1,4 +1,4 @@
-internal void 
+internal void
 clear_screen(u32 col) {
 	u32* pixel = (u32*)render_state.memory;
 	for (int y = 0; y < render_state.height; y++) {
@@ -8,7 +8,7 @@ clear_screen(u32 col) {
 	}
 }
 
-internal void 
+internal void
 draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 col) {
 
 	x0 = clamp(0, x0, render_state.width);
@@ -17,7 +17,7 @@ draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 col) {
 	y1 = clamp(0, y1, render_state.height);
 
 	for (int y = y0; y < y1; y++) {
-		u32* pixel = (u32 *)render_state.memory + x0 + y * render_state.width;
+		u32* pixel = (u32*)render_state.memory + x0 + y * render_state.width;
 		for (int x = x0; x < x1; x++) {
 			*pixel++ = col;
 		}
@@ -26,7 +26,7 @@ draw_rect_in_pixels(int x0, int y0, int x1, int y1, u32 col) {
 
 global_variable float render_scale = 0.01f;
 
-internal void 
+internal void
 draw_rect(float x, float y, float half_size_x, float half_size_y, u32 col) {
 	// change to pixels 
 
@@ -45,4 +45,94 @@ draw_rect(float x, float y, float half_size_x, float half_size_y, u32 col) {
 	int y1 = y + half_size_y;
 
 	draw_rect_in_pixels(x0, y0, x1, y1, col);
+}
+
+internal void
+draw_number(int number, float x, float y, float size, u32 col) {
+	float half_size = size * .5f;
+	do {
+		int digit = number % 10;
+		number /= 10;
+
+		switch (digit) {
+		case 0: {
+			draw_rect(x - size, y, half_size, 2.5f * size, col);
+			draw_rect(x + size, y, half_size, 2.5f * size, col);
+			draw_rect(x, y + size * 2.f, half_size, half_size, col);
+			draw_rect(x, y - size * 2.f, half_size, half_size, col);
+			x -= size * 4.f;
+		}break;
+
+		case 1: {
+			draw_rect(x + size, y, half_size, 2.5f * size, col);
+			x -= size * 2.f;
+		} break;
+
+		case 2: {
+			draw_rect(x, y + size * 2.f, 1.5f * size, half_size, col);
+			draw_rect(x, y, 1.5f * size, half_size, col);
+			draw_rect(x, y - size * 2.f, 1.5f * size, half_size, col);
+			draw_rect(x + size, y + size, half_size, half_size, col);
+			draw_rect(x - size, y - size, half_size, half_size, col);
+			x -= size * 4.f;
+		} break;
+
+		case 3: {
+			draw_rect(x - half_size, y + size * 2.f, size, half_size, col);
+			draw_rect(x - half_size, y, size, half_size, col);
+			draw_rect(x - half_size, y - size * 2.f, size, half_size, col);
+			draw_rect(x + size, y, half_size, 2.5f * size, col);
+			x -= size * 4.f;
+		} break;
+
+		case 4: {
+			draw_rect(x + size, y, half_size, 2.5f * size, col);
+			draw_rect(x - size, y + size, half_size, 1.5f * size, col);
+			draw_rect(x, y, half_size, half_size, col);
+			x -= size * 4.f;
+		} break;
+
+		case 5: {
+			draw_rect(x, y + size * 2.f, 1.5f * size, half_size, col);
+			draw_rect(x, y, 1.5f * size, half_size, col);
+			draw_rect(x, y - size * 2.f, 1.5f * size, half_size, col);
+			draw_rect(x - size, y + size, half_size, half_size, col);
+			draw_rect(x + size, y - size, half_size, half_size, col);
+			x -= size * 4.f;
+		} break;
+
+		case 6: {
+			draw_rect(x + half_size, y + size * 2.f, size, half_size, col);
+			draw_rect(x + half_size, y, size, half_size, col);
+			draw_rect(x + half_size, y - size * 2.f, size, half_size, col);
+			draw_rect(x - size, y, half_size, 2.5f * size, col);
+			draw_rect(x + size, y - size, half_size, half_size, col);
+			x -= size * 4.f;
+		} break;
+
+		case 7: {
+			draw_rect(x + size, y, half_size, 2.5f * size, col);
+			draw_rect(x - half_size, y + size * 2.f, size, half_size, col);
+			x -= size * 4.f;
+		} break;
+
+		case 8: {
+			draw_rect(x - size, y, half_size, 2.5f * size, col);
+			draw_rect(x + size, y, half_size, 2.5f * size, col);
+			draw_rect(x, y + size * 2.f, half_size, half_size, col);
+			draw_rect(x, y - size * 2.f, half_size, half_size, col);
+			draw_rect(x, y, half_size, half_size, col);
+			x -= size * 4.f;
+		} break;
+
+		case 9: {
+			draw_rect(x - half_size, y + size * 2.f, size, half_size, col);
+			draw_rect(x - half_size, y, size, half_size, col);
+			draw_rect(x - half_size, y - size * 2.f, size, half_size, col);
+			draw_rect(x + size, y, half_size, 2.5f * size, col);
+			draw_rect(x - size, y + size, half_size, half_size, col);
+			x -= size * 4.f;
+		} break;
+		}
+	} while (number);
 }
