@@ -1,7 +1,10 @@
 #include <Windows.h>
+#include <chrono>
+#include <thread>
 #include "utils.cpp"
 
 global_variable bool running = true;
+global_variable int MAXFPS = 165;
 
 struct Render_State {
 	int height, width;
@@ -114,6 +117,9 @@ input.buttons[b].is_down = is_down;\
 		}
 
 		// Simulate
+		if (delta_time < (float)(1 / MAXFPS)) {
+			std::this_thread::sleep_for(std::chrono::microseconds((int)(1000000 * (float)(1 / MAXFPS - delta_time))));
+		}
 		simulate_game(&input, delta_time);
 
 		// Render

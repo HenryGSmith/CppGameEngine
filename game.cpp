@@ -50,8 +50,16 @@ simulate_game(Input *input, float dt) {
 	clear_screen(black);
 	
 	float player_1_ddp = 0.f;
+#if 0
 	if (is_down(BUTTON_W))    player_1_ddp += 2000;
 	if (is_down(BUTTON_S))  player_1_ddp -= 2000;
+#else
+	if (ball_dp_x < 0) {
+		player_1_ddp = (ball_p_y - player_1_p) * 150;
+		if (player_1_ddp > 1300) player_1_ddp = 1300;
+		if (player_1_ddp < -1300) player_1_ddp = -1300;
+	}
+#endif
 	
 	float player_2_ddp = 0.f;
 	if (is_down(BUTTON_UP))    player_2_ddp += 2000;
